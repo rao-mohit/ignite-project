@@ -10,11 +10,11 @@ echo  Initializing AI Phishing Detection Engine ^& React SaaS Dashboard...
 echo =====================================================================
 echo.
 
-:: Add Node.js and Python to PATH for current session
-set "PATH=C:\Users\UCS\AppData\Local\Programs\nodejs;C:\Users\UCS\AppData\Local\Python\pythoncore-3.14-64;%PATH%"
+:: Add Python and Node.js to PATH dynamically
+set "PATH=%LOCALAPPDATA%\Programs\Python\Python314;%LOCALAPPDATA%\Programs\Python\Python314\Scripts;%ProgramFiles%\nodejs;%LOCALAPPDATA%\Programs\nodejs;%PATH%"
 
 echo [1/2] Starting FastAPI Backend Engine (Port 8000)...
-start "ThreatGuard FastAPI Backend" cmd /k "cd /d %~dp0 && python -m uvicorn backend.main:app --reload --port 8000"
+start "ThreatGuard FastAPI Backend" cmd /k "cd /d %~dp0 && py -m uvicorn backend.main:app --reload --port 8000"
 
 echo [2/2] Starting React + Vite Frontend Server (Port 3000)...
 start "ThreatGuard React Dashboard" cmd /k "cd /d %~dp0frontend && npm run dev"

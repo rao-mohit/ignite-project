@@ -76,3 +76,77 @@ def test_analytics():
     data = response.json()
     assert "total_scans" in data
     assert "risk_distribution" in data
+
+def test_sms_sentinel_phishing_red_flag():
+    payload = {
+        "sender": "VK-SBIBNK",
+        "message": "URGENT SBI ALERT: Dear Customer, your SBI account is blocked. Enter OTP & pan details at http://sbi-kyc-reactivate.xyz immediately."
+    }
+    response = client.post("/api/sms/incoming", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["is_red_flagged"] == True
+    assert data["risk_level"] in ["HIGH", "CRITICAL"]
+    assert "QUARANTINED" in data["action_taken"]
+    assert data["sender"] == "VK-SBIBNK"
+
+def test_sms_sentinel_safe_message():
+    payload = {
+        "sender": "AX-AMZIND",
+        "message": "Your Amazon delivery package #402-9812-771 is out for delivery. Share PIN 4921 upon delivery."
+    }
+    response = client.post("/api/sms/incoming", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["is_red_flagged"] == False
+    assert data["risk_level"] == "LOW"
+
+def test_sms_live_feed():
+    response = client.get("/api/sms/live-feed")
+    assert response.status_code == 200
+    data = response.json()
+    assert "total_sms" in data
+    assert "red_flagged_count" in data
+    assert "presets" in data
+
+def test_auth_login_seeded_admin():
+    response = client.post("/api/auth/login", json={
+        "email": "admin@threatguard.ai",
+        "password": "password123"
+    })
+    assert response.status_code == 200
+    data = response.json()
+    assert data["user"]["email"] == "admin@threatguard.ai"
+    assert data["user"]["role"] in ["admin", "Lead Security Officer"]
+    assert "token" in data
+
+def test_auth_register_and_login():
+    import uuid
+    random_email = f"officer_{uuid.uuid4().hex[:6]}@threatguard.ai"
+    
+    # 1. Register
+    reg_response = client.post("/api/auth/register", json={
+        "full_name": "Rohan Sharma",
+        "email": random_email,
+        "password": "SecurePassword123!"
+    })
+    assert reg_response.status_code == 200
+    reg_data = reg_response.json()
+    assert reg_data["user"]["email"] == random_email
+    assert reg_data["user"]["full_name"] == "Rohan Sharma"
+    
+    # 2. Login with correct password
+    login_response = client.post("/api/auth/login", json={
+        "email": random_email,
+        "password": "SecurePassword123!"
+    })
+    assert login_response.status_code == 200
+    assert login_response.json()["user"]["email"] == random_email
+    
+    # 3. Login with wrong password
+    bad_login = client.post("/api/auth/login", json={
+        "email": random_email,
+        "password": "WrongPassword999"
+    })
+    assert bad_login.status_code == 401
+

@@ -21,9 +21,13 @@ class ScanRecord(Base):
     recommendation = Column(Text, nullable=False)
     analysis_type = Column(String, nullable=False) # 'ML + Rules', 'Rule-Based Fallback'
     model_confidence = Column(Float, nullable=True)
+    sender = Column(String, nullable=True) # Phone number or sender identifier
+    channel = Column(String, default="sms") # 'sms' or 'whatsapp'
+    is_red_flagged = Column(Integer, default=0) # 1 if flagged as threat/scam, 0 otherwise
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     def to_dict(self):
+        flagged = bool(self.is_red_flagged) if self.is_red_flagged is not None else (self.risk_level in ["HIGH", "CRITICAL"] or (self.risk_score or 0) >= 50)
         return {
             "scan_id": self.scan_id,
             "input_type": self.input_type,
@@ -36,5 +40,27 @@ class ScanRecord(Base):
             "recommendation": self.recommendation,
             "analysis_type": self.analysis_type,
             "model_confidence": self.model_confidence,
+            "sender": self.sender or "Unknown",
+            "channel": self.channel or ("whatsapp" if "whatsapp" in (self.sender or "").lower() else "sms"),
+            "is_red_flagged": flagged,
+            "created_at": self.created_at.isoformat() if self.created_at else None
+        }
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(String, primary_key=True, default=generate_uuid)
+    full_name = Column(String, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    password_hash = Column(String, nullable=False)
+    role = Column(String, default="SOC Analyst")
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "full_name": self.full_name,
+            "email": self.email,
+            "role": self.role,
             "created_at": self.created_at.isoformat() if self.created_at else None
         }

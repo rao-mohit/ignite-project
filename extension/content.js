@@ -103,3 +103,18 @@ function showWarningModal(targetUrl, data) {
     window.location.href = targetUrl;
   });
 }
+
+// WhatsApp Web Active Shield Indicator
+if (window.location.hostname.includes("whatsapp.com")) {
+  const badge = document.createElement("div");
+  badge.id = "tg-wa-shield-badge";
+  badge.style.cssText = `
+    position: fixed; bottom: 16px; left: 16px; z-index: 99999;
+    background: #064e3b; color: #a7f3d0; border: 1px solid #10b981;
+    border-radius: 9999px; padding: 6px 14px; font-size: 11px; font-weight: 700;
+    font-family: system-ui, sans-serif; display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  `;
+  badge.innerHTML = `<span style="width:7px; height:7px; border-radius:50%; background:#34d399; display:inline-block;"></span> ThreatGuard AI: WhatsApp Phishing Protection Active`;
+  document.body.appendChild(badge);
+}

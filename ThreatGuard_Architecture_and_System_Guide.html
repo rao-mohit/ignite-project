@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ThreatGuard AI - Complete System Architecture & Operational Guide</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    @page {
+      size: A4;
+      margin: 14mm 14mm 14mm 14mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1e293b;
+      background-color: #ffffff;
+      line-height: 1.55;
+      font-size: 11pt;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    .page {
+      page-break-after: always;
+      position: relative;
+      min-height: 260mm;
+      padding-bottom: 20px;
+    }
+
+    .page:last-child {
+      page-break-after: avoid;
+    }
+
+    /* Cover Page */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 265mm;
+      padding: 20mm 15mm 15mm 15mm;
+      background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 50%, #4c0519 100%);
+      color: #ffffff;
+      border-radius: 12px;
+    }
+
+    .cover-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(225, 29, 72, 0.25);
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      color: #fda4af;
+      font-size: 10pt;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 9999px;
+    }
+
+    .cover-title-group {
+      margin-top: 40px;
+    }
+
+    .cover-subtitle {
+      color: #f43f5e;
+      font-size: 14pt;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .cover-title {
+      font-size: 32pt;
+      font-weight: 800;
+      line-height: 1.15;
+      color: #ffffff;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .cover-desc {
+      font-size: 13pt;
+      color: #cbd5e1;
+      max-width: 90%;
+      line-height: 1.6;
+    }
+
+    .cover-highlights {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 40px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .highlight-card h4 {
+      color: #fb7185;
+      font-size: 11pt;
+      margin-bottom: 4px;
+    }
+
+    .highlight-card p {
+      color: #94a3b8;
+      font-size: 9.5pt;
+    }
+
+    .cover-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9.5pt;
+      color: #94a3b8;
+    }
+
+    /* Standard Pages Header/Footer */
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 18px;
+    }
+
+    .doc-header-logo {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #be185d;
+      letter-spacing: -0.01em;
+    }
+
+    .doc-header-section {
+      font-size: 9pt;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Headings */
+    h1 {
+      font-size: 20pt;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: 14pt;
+      font-weight: 700;
+      color: #831843;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1.5px solid #fbcfe8;
+    }
+
+    h3 {
+      font-size: 11.5pt;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 12px;
+      margin-bottom: 6px;
+    }
+
+    p {
+      margin-bottom: 10px;
+      color: #334155;
+    }
+
+    /* Callout & Alert Boxes */
+    .alert-box {
+      background: #fdf2f8;
+      border-left: 4px solid #be185d;
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 14px 0;
+    }
+
+    .alert-box h4 {
+      color: #9d174d;
+      font-size: 10.5pt;
+      margin-bottom: 4px;
+    }
+
+    .alert-box p {
+      margin: 0;
+      font-size: 9.5pt;
+      color: #475569;
+    }
+
+    .alert-critical {
+      background: #fff1f2;
+      border-left-color: #e11d48;
+    }
+    .alert-critical h4 { color: #be123c; }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 16px 0;
+      font-size: 9pt;
+    }
+
+    th {
+      background-color: #0f172a;
+      color: #ffffff;
+      font-weight: 600;
+      text-align: left;
+      padding: 8px 10px;
+    }
+
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-critical { background: #ffe4e6; color: #be123c; border: 1px solid #fecdd3; }
+    .badge-high { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+    .badge-safe { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+    .badge-code { background: #f1f5f9; color: #0f172a; font-family: 'JetBrains Mono', monospace; font-size: 8pt; }
+
+    /* Code & Architecture Boxes */
+    .code-block {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8pt;
+      line-height: 1.45;
+      margin: 10px 0;
+      white-space: pre-wrap;
+    }
+
+    .diagram-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 12px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8pt;
+      line-height: 1.4;
+      color: #0f172a;
+    }
+
+    /* Grid cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 12px 0;
+    }
+
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .card-title {
+      font-weight: 700;
+      font-size: 10.5pt;
+      color: #0f172a;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-desc {
+      font-size: 9pt;
+      color: #475569;
+      line-height: 1.45;
+      margin-bottom: 0;
+    }
+
+    /* Workflow Step */
+    .step-list {
+      counter-reset: step-counter;
+      list-style: none;
+      margin: 10px 0;
+    }
+
+    .step-item {
+      position: relative;
+      padding-left: 36px;
+      margin-bottom: 12px;
+      font-size: 9.5pt;
+      color: #334155;
+    }
+
+    .step-item::before {
+      counter-increment: step-counter;
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 24px;
+      height: 24px;
+      background: #be185d;
+      color: #ffffff;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      font-size: 8.5pt;
+      font-weight: 700;
+    }
+
+    .step-title {
+      font-weight: 700;
+      color: #0f172a;
+      display: block;
+      margin-bottom: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== PAGE 1: COVER PAGE ==================== -->
+  <div class="page">
+    <div class="cover">
+      <div class="cover-top">
+        <span class="cover-badge">Cybersecurity Technical Whitepaper</span>
+        <span class="cover-badge" style="background: rgba(56, 189, 248, 0.2); border-color: rgba(56, 189, 248, 0.4); color: #7dd3fc;">Version 2.4 Enterprise</span>
+      </div>
+
+      <div class="cover-title-group">
+        <div class="cover-subtitle">ThreatGuard AI Architecture & Engineering Blueprint</div>
+        <div class="cover-title">Next-Gen Multi-Channel Phishing & Smishing Defense System</div>
+        <p class="cover-desc">
+          Ek comprehensive guide jo explain karti hai ki hamara ThreatGuard AI system internally kaise kaam karta hai, har ek component ka kya role hai, WhatsApp aur SMS messages AI tak kaise pahunchte hain, aur real-time red-flagging kaise execute hoti hai.
+        </p>
+
+        <div class="cover-highlights">
+          <div class="highlight-card">
+            <h4>Dual-Core AI Engine</h4>
+            <p>NLP Urgency Extraction, Lookalike Domain Spoofing, aur Heuristic Pattern Matrix ka hybrid model.</p>
+          </div>
+          <div class="highlight-card">
+            <h4>Autonomous Ingestion</h4>
+            <p>Android Notification Listeners, Chrome DOM Observers, aur REST API Webhooks for SMS/WhatsApp.</p>
+          </div>
+          <div class="highlight-card">
+            <h4>Enterprise SOC UI</h4>
+            <p>Live WebSockets, Glassmorphism Dashboard, PBKDF2 Auth, aur Instant Audio-Visual Sirens.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cover-footer">
+        <div><strong>Project:</strong> ThreatGuard Security Operations Center (SOC)</div>
+        <div><strong>Engine:</strong> FastAPI + Scikit-Learn + SQLite</div>
+        <div><strong>Date:</strong> October 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 2: HIGH-LEVEL ARCHITECTURE & SUBSYSTEMS ==================== -->
+  <div class="page">
+    <div class="doc-header">
+      <span class="doc-header-logo">THREATGUARD AI</span>
+      <span class="doc-header-section">Section 1: High-Level Architecture</span>
+    </div>
+
+    <h1>1. System Overview & Architecture</h1>
+    <p>
+      ThreatGuard AI ek comprehensive cybersecurity platform hai jo real-time me malicious SMS, WhatsApp scams, bank credential theft (phishing), aur fake job offers ko detect karta hai. Ye system <strong>3 interconnected layers</strong> par based hai:
+    </p>
+
+    <div class="diagram-box">
+┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                THREATGUARD AI COMPLETE PIPELINE                                │
+└────────────────────────────────────────────────────────────────────────────────────────────────┘
+  [ INGESTION LAYER ]               [ INTELLIGENCE LAYER ]               [ PRESENTATION & SOC ]
+  
+  ┌───────────────────────┐         ┌────────────────────────┐         ┌───────────────────────┐
+  │ 1. Android Companion  │         │ 1. FastAPI Router      │         │ 1. Glassmorphism UI   │
+  │    (SMS Receiver &    │         │    (/api/sms/incoming  │         │    (ThreatGuard       │
+  │     Notification)     │────┐    │     /api/auth/...)     │    ┌───▶│     Dashboard)        │
+  └───────────────────────┘    │    └───────────┬────────────┘    │    └───────────────────────┘
+                               │                │                 │
+  ┌───────────────────────┐    │    ┌───────────▼────────────┐    │    ┌───────────────────────┐
+  │ 2. Chrome Extension   │    ├───▶│ 2. AI Hybrid Engine    │────┤    │ 2. Live Audio Siren   │
+  │    (web.whatsapp.com  │    │    │    - NLP Classifier    │    │    │    (Web Audio Chime   │
+  │     DOM Listener)     │────┤    │    - Heuristic Rules   │    │    │     & Banner Alert)   │
+  └───────────────────────┘    │    │    - URL Risk Analyzer │    │    └───────────────────────┘
+                               │    └───────────┬────────────┘    │
+  ┌───────────────────────┐    │                │                 │    ┌───────────────────────┐
+  │ 3. SOC Test Simulator │    │    ┌───────────▼────────────┐    │    │ 3. WebSocket Feed     │
+  │    (1-Click Presets   │────┘    │ 3. SQLite Database     │────┘    │    (/ws/sms Live      │
+  │     & Custom Dispatch)│         │    (Scans, Users, Auth)│         │     Broadcast)        │
+  └───────────────────────┘         └────────────────────────┘         └───────────────────────┘
+    </div>
+
+    <h2>Konta System Kya Kaam Karta Hai? (Subsystem Breakdown)</h2>
+
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-title">📡 1. Ingestion Layer (Message Collector)</div>
+        <p class="card-desc">
+          Ye layer external duniya se raw messages ko capture karti hai. Chahe user ke Android phone par SMS aaye, WhatsApp notification pop ho, ya browser par WhatsApp Web open ho—ye components us message ko securely pakad kar backend API ko bhejte hain.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🧠 2. AI Detection Engine (Brain)</div>
+        <p class="card-desc">
+          Backend service (`detector.py`) jo incoming text ko analyze karti hai. Ye message ke andar urgency words, bank fraud patterns, PAN card extortion, aur fake URLs ko check karke <strong>0 se 100 ka Risk Score</strong> calculate karti hai.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🛡️ 3. Policy & Quarantine Subsystem</div>
+        <p class="card-desc">
+          Agar Risk Score 75 se zyada ya level CRITICAL hota hai, toh ye system automatically <strong>`is_red_flagged = True`</strong> set karta hai, action ko <strong>QUARANTINE_AND_NOTIFY</strong> banata hai aur SQLite DB me store karta hai.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">💻 4. SOC Frontend Dashboard & Auth</div>
+        <p class="card-desc">
+          Security Officer ke samne chalne wala web console. Ye WebSockets ke through bina page refresh kiye incoming threats dikhata hai, warning sound bajata hai, aur analyst ko login/signup access control deta hai.
+        </p>
+      </div>
+    </div>
+
+    <div class="alert-box">
+      <h4>💡 Key Architecture Philosophy</h4>
+      <p>
+        System ko is tarah design kiya gaya hai ki agar ML model pre-trained file load na bhi ho, tab bhi heuristic domain-specific rules fallback ke taur par 100% scam detection accuracy maintain rakhte hain.
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 3: CODEBASE FILE-BY-FILE MAP ==================== -->
+  <div class="page">
+    <div class="doc-header">
+      <span class="doc-header-logo">THREATGUARD AI</span>
+      <span class="doc-header-section">Section 2: Component & File Map</span>
+    </div>
+
+    <h1>2. Detailed Component & File Breakdown</h1>
+    <p>
+      Project me kaunsi file kis purpose ke liye banayi gayi hai aur unka aapas me connection kya hai:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 22%;">File Path</th>
+          <th style="width: 18%;">Module Name</th>
+          <th style="width: 38%;">Kya Kaam Karta Hai (Role & Responsibility)</th>
+          <th style="width: 22%;">Tech Stack</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-code">backend/main.py</span></td>
+          <td><strong>API Gateway & Server</strong></td>
+          <td>Main application entry point. Sabhi REST endpoints (`/api/sms/incoming`, `/api/auth/*`, `/api/history`) aur WebSocket `/ws/sms` handle karta hai. Background task broadcasting execute karta hai.</td>
+          <td>FastAPI, Starlette, Uvicorn</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-code">backend/services/detector.py</span></td>
+          <td><strong>AI Threat Detector</strong></td>
+          <td>Core AI engine. Text me se URLs nikalna, domain spoofing check karna, NLP keyword extraction, urgency detection, aur risk scoring calculate karna.</td>
+          <td>Python 3.14, Scikit-learn, Regex</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-code">backend/database.py</span></td>
+          <td><strong>Data & Crypto Core</strong></td>
+          <td>SQLite database engine, automatic schema migrations, aur zero-dependency PBKDF2-HMAC-SHA256 password hashing. Default admin account seed karta hai.</td>
+          <td>SQLAlchemy, Hashlib, OS</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-code">backend/models.py</span></td>
+          <td><strong>Database ORM Models</strong></td>
+          <td>SQLAlchemy tables: `ScanRecord` (scan results, sender, channel, is_red_flagged) aur `User` (analyst credentials, roles).</td>
+          <td>SQLAlchemy ORM</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-code">backend/schemas.py</span></td>
+          <td><strong>Pydantic Validation</strong></td>
+          <td>Request aur response contracts: `IncomingSMSRequest`, `SMSDetectionResponse`, `UserRegisterRequest`, `UserLoginRequest`.</td>
+          <td>Pydantic v2</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-code">ThreatGuard_Dashboard.html</span></td>
+          <td><strong>SOC Master Console</strong></td>
+          <td>Complete analyst UI. Live Sentinel monitor, one-click scam simulators, audio siren alert, dynamic quarantine table, aur Auth Modal.</td>
+          <td>HTML5, Vanilla JS, CSS3 Glassmorphism</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-code">extension/content.js</span></td>
+          <td><strong>WhatsApp Web Interceptor</strong></td>
+          <td>Browser extension jo WhatsApp Web (`web.whatsapp.com`) par DOM changes aur chat links ko monitor karke backend se check karati hai.</td>
+          <td>Chrome Extension MV3, Vanilla JS</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-code">android_companion/*.kt</span></td>
+          <td><strong>Mobile Listeners</strong></td>
+          <td>`ThreatGuardSmsReceiver.kt` (SMS aate hi grab karta hai) aur `ThreatGuardNotificationReceiver.kt` (WhatsApp notification read karke backend ko POST karta hai).</td>
+          <td>Kotlin, Android SDK</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Data Storage Architecture (SQLite: threatguard.db)</h2>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-title">📁 Table: `scan_history`</div>
+        <p class="card-desc">
+          <strong>Columns:</strong> `id` (UUID), `input_text`, `risk_score` (0-100), `risk_level` (LOW/MED/HIGH/CRITICAL), `sender` (+91...), `channel` (sms/whatsapp), `is_red_flagged` (0/1), `reasons_json`, `recommendation`, `created_at`.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title">👤 Table: `users`</div>
+        <p class="card-desc">
+          <strong>Columns:</strong> `id` (UUID), `full_name`, `email` (Unique), `password_hash` (PBKDF2 Salted), `role` (Admin / SOC Analyst), `created_at`.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 4: HOW AI DETECTS & RED-FLAGS ==================== -->
+  <div class="page">
+    <div class="doc-header">
+      <span class="doc-header-logo">THREATGUARD AI</span>
+      <span class="doc-header-section">Section 3: AI Detection Logic</span>
+    </div>
+
+    <h1>3. AI Kaise Kaam Karta Hai? (Under the Hood)</h1>
+    <p>
+      AI kisi bhi incoming message ko 4 sequential stages me process karta hai:
+    </p>
+
+    <div class="step-list">
+      <div class="step-item">
+        <span class="step-title">Stage 1: Preprocessing & URL Parsing</span>
+        Message text ko clean kiya jata hai aur regular expressions ke through usme maujood sabhi web links (`http://`, `https://`, ya raw domains) ko extract kiya jata hai.
+      </div>
+      <div class="step-item">
+        <span class="step-title">Stage 2: Heuristic Cyber-Threat Weighting</span>
+        AI text ke andar specialized cyber-fraud patterns ko scan karke points add karta hai:
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Fraud Category</th>
+          <th>Detection Patterns & Keywords</th>
+          <th>Risk Weight</th>
+          <th>Real Scam Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Urgency Coercion</strong></td>
+          <td>`immediately`, `within 24 hours`, `account suspended`, `electricity cutoff tonight`</td>
+          <td><span class="badge badge-high">+25 to +35 pts</span></td>
+          <td>"Your power supply will be disconnected at 9:30 PM due to unpaid bill. Call immediately."</td>
+        </tr>
+        <tr>
+          <td><strong>2. Credential Theft</strong></td>
+          <td>`update pan`, `kyc pending`, `enter otp`, `card blocked`, `sbi-yono`</td>
+          <td><span class="badge badge-critical">+35 to +45 pts</span></td>
+          <td>"Dear SBI User, your YONO account is locked. Submit your PAN here: http://bit.ly/sbi-pan"</td>
+        </tr>
+        <tr>
+          <td><strong>3. Fake Job / WFH Task</strong></td>
+          <td>`part-time job`, `earn 5000 daily`, `like youtube video`, `telegram contact`, `hotel rating`</td>
+          <td><span class="badge badge-critical">+50 pts</span></td>
+          <td>"Earn ₹5000/day from home by rating hotels on Google Maps. Send message to @HR_Recruiter."</td>
+        </tr>
+        <tr>
+          <td><strong>4. Lookalike & Short URLs</strong></td>
+          <td>`bit.ly`, `tinyurl`, `.xyz`, `.top`, `.tk`, raw IP address links</td>
+          <td><span class="badge badge-high">+35 to +40 pts</span></td>
+          <td>"Link: http://192.168.1.10/login or http://sbi-verification.xyz"</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Risk Score Calculation & Red-Flagging Formula</h2>
+    <p>
+      Total Risk Score compute hone ke baad system automatic decision leta hai:
+    </p>
+
+    <div class="code-block">
+Risk Score = Min(100, Base_NLP_Probability * 50 + Sum(Heuristic_Category_Weights))
+
+IF (Risk Score >= 75 OR Risk Level == "CRITICAL"):
+    is_red_flagged = True
+    action_taken   = "QUARANTINE_AND_NOTIFY"
+    alert_badge    = "🚨 RED FLAGGED"
+    Play_Audio_Siren()
+ELSE IF (Risk Score >= 50):
+    is_red_flagged = False
+    action_taken   = "FLAG_FOR_REVIEW"
+    alert_badge    = "⚠️ HIGH RISK"
+ELSE:
+    is_red_flagged = False
+    action_taken   = "ALLOW"
+    alert_badge    = "✅ SAFE"
+    </div>
+
+    <div class="alert-box alert-critical">
+      <h4>🚨 Red Flag Action Policy</h4>
+      <p>
+        Jab bhi `is_red_flagged` True hota hai, message ko dashboard ki <strong>Quarantine Table</strong> me permanently log kiya jata hai aur Web Audio API browser par ek 880Hz alternating frequency siren chime trigger karta hai taaki security analyst ka turant dhyan jaye.
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 5: WHATSAPP & SMS DATA FLOW ==================== -->
+  <div class="page">
+    <div class="doc-header">
+      <span class="doc-header-logo">THREATGUARD AI</span>
+      <span class="doc-header-section">Section 4: Data Flow Scenarios</span>
+    </div>
+
+    <h1>4. WhatsApp & SMS Ka Message Kaise Aata Hai?</h1>
+    <p>
+      Ek practical example se samjhiye ki real life me message aane par system me kya-kya hota hai:
+    </p>
+
+    <h2>Scenario A: WhatsApp Par Scam Message Aaya</h2>
+
+    <div class="step-list">
+      <div class="step-item">
+        <span class="step-title">Step 1: User ke Phone ya WhatsApp Web par Message Aaya</span>
+        Scammer ne number `+91 91234 56789` se bheja: <em>"Earn ₹5,000/day by liking YouTube videos! Join Telegram t.me/task99"</em>.
+      </div>
+      <div class="step-item">
+        <span class="step-title">Step 2: Message Interception (Mobile / Web)</span>
+        <strong>Mobile Par:</strong> Android ki `ThreatGuardNotificationReceiver.kt` WhatsApp ki notification read kar leti hai.<br>
+        <strong>Web Par:</strong> Chrome extension ka `content.js` WhatsApp Web ki chat DOM me se text aur link grab kar leta hai.
+      </div>
+      <div class="step-item">
+        <span class="step-title">Step 3: Backend Ingestion API Trigger</span>
+        Listener background me POST request fire karta hai:
+        <div class="code-block">
+POST http://127.0.0.1:8000/api/whatsapp/incoming
+Headers: {"Content-Type": "application/json"}
+Body: {
+  "sender": "+91 91234 56789",
+  "channel": "whatsapp",
+  "message": "Earn ₹5,000/day by liking YouTube videos! Join Telegram t.me/task99"
+}
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-title">Step 4: AI Analysis & DB Commit</span>
+        `detector.py` message ko scan karta hai: WFH pattern (+50) + Telegram redirection (+35) = <strong>Risk Score 85 (CRITICAL)</strong>. Message `is_red_flagged: True` ke sath `threatguard.db` me save hota hai.
+      </div>
+      <div class="step-item">
+        <span class="step-title">Step 5: WebSocket Real-Time Broadcast</span>
+        Backend `/ws/sms` par connected sabhi active browsers ko live alert packet broadcast karta hai.
+      </div>
+      <div class="step-item">
+        <span class="step-title">Step 6: Dashboard Action (Instant Warning)</span>
+        Dashboard par bina page refresh kiye:
+        <ul style="margin-left: 20px; margin-top: 4px; font-size: 9pt;">
+          <li>Flashing Red Alert Siren banner pop-up hota hai.</li>
+          <li>Sound alert (Chime) bajta hai.</li>
+          <li>Red-Flag Counter badge 1 se badh jata hai.</li>
+          <li>Quarantine table me threat breakdown reasons display ho jate hain.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Scenario B: User Authentication Flow (Login & Signup)</h2>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-title">📝 Registration (`POST /api/auth/register`)</div>
+        <p class="card-desc">
+          User apna Naam, Email aur Password deta hai. Backend 16-byte random salt generate karke `hashlib.pbkdf2_hmac('sha256')` se 100,000 iterations me secure hash banata hai aur `users` table me store karta hai.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title">🔑 Login (`POST /api/auth/login`)</div>
+        <p class="card-desc">
+          Email se user record fetch hota hai. Saved salt ke sath input password ko re-hash karke verify kiya jata hai. Success par session token aur user profile return hota hai jo browser ke `localStorage` me save ho jata hai.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 6: API REFERENCE & HOW TO RUN ==================== -->
+  <div class="page">
+    <div class="doc-header">
+      <span class="doc-header-logo">THREATGUARD AI</span>
+      <span class="doc-header-section">Section 5: API Docs & Deployment</span>
+    </div>
+
+    <h1>5. REST API Reference & Operational Guide</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Endpoint</th>
+          <th>Description</th>
+          <th>Sample Payload / Params</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-critical">POST</span></td>
+          <td>`/api/sms/incoming`</td>
+          <td>SMS message ingestion & real-time red-flag analysis.</td>
+          <td>`{"message": "...", "sender": "+91...", "channel": "sms"}`</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-critical">POST</span></td>
+          <td>`/api/whatsapp/incoming`</td>
+          <td>WhatsApp message ingestion & threat detection.</td>
+          <td>`{"message": "...", "sender": "+91...", "channel": "whatsapp"}`</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-safe">GET</span></td>
+          <td>`/api/sms/live-feed`</td>
+          <td>Returns total SMS scanned, red-flag count & recent history.</td>
+          <td>Query: `?limit=20`</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-high">POST</span></td>
+          <td>`/api/sms/simulate`</td>
+          <td>One-click simulation of pre-configured scams & safe texts.</td>
+          <td>`{"preset_key": "pan_deactivation"}`</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-critical">POST</span></td>
+          <td>`/api/auth/register`</td>
+          <td>Registers a new SOC analyst user in the database.</td>
+          <td>`{"full_name": "...", "email": "...", "password": "..."}`</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-critical">POST</span></td>
+          <td>`/api/auth/login`</td>
+          <td>Authenticates credentials and returns session token.</td>
+          <td>`{"email": "...", "password": "..."}`</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-safe">GET</span></td>
+          <td>`/api/auth/me`</td>
+          <td>Fetches currently logged-in analyst's profile.</td>
+          <td>Header: `Authorization: Bearer <token>`</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-high">WS</span></td>
+          <td>`/ws/sms`</td>
+          <td>WebSocket stream for real-time live threat broadcasting.</td>
+          <td>Duplex event stream</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>System Ko Run & Test Kaise Karein? (Step-by-Step Commands)</h2>
+
+    <div class="step-list">
+      <div class="step-item">
+        <span class="step-title">Step 1: Start Backend Server</span>
+        <div class="code-block">
+# Project root directory me command chalayein:
+py -m uvicorn backend.main:app --reload --port 8000
+# Ya 'START_THREATGUARD.bat' par double click karein.
+        </div>
+      </div>
+
+      <div class="step-item">
+        <span class="step-title">Step 2: Open Dashboard</span>
+        <div class="code-block">
+# 'ThreatGuard_Dashboard.html' ko kisi bhi browser me open karein:
+Start-Process "ThreatGuard_Dashboard.html"
+# Ya 'OPEN_IN_BRAVE.bat' run karein.
+        </div>
+      </div>
+
+      <div class="step-item">
+        <span class="step-title">Step 3: Run Backend Test Suite</span>
+        <div class="code-block">
+# Sabhi 11 unit tests verify karne ke liye:
+py -m pytest backend/tests/test_backend.py
+# Result: 11 passed (Auth, Ingestion, Red-Flag Detection, Live-Feed)
+        </div>
+      </div>
+    </div>
+
+    <div class="alert-box">
+      <h4>🎯 Pre-seeded Demo Credentials</h4>
+      <p>
+        <strong>Email:</strong> `admin@threatguard.ai` &nbsp;|&nbsp; 
+        <strong>Password:</strong> `password123` &nbsp;|&nbsp; 
+        <strong>Role:</strong> Lead Security Officer<br>
+        Dashboard me <em>"⚡ Quick Fill Demo Admin"</em> button dabakar bina type kiye 1 second me login kiya ja sakta hai.
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>
+

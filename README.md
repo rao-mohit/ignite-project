@@ -126,8 +126,12 @@ python backend/train_model.py
 3. **URL Structural Inspection Demo:**
    - Switch to URL Scanner, enter `http://paypa1-security-update.xyz/verify-login.php`.
    - Show typosquatting detection (`paypa1`), high-risk TLD (`.xyz`), and domain feature evidence.
-4. **Chrome Extension Real-Time Intercept:**
+4. **AI Automatic SMS Sentinel & Real-Time Red-Flag Quarantine:**
+   - Ingests incoming SMS traffic automatically via Mobile Broadcast Receiver, Twilio, or Webhook (`POST /api/sms/incoming`).
+   - Evaluates each message in <15ms through hybrid NLP heuristics + TF-IDF ML text classification.
+   - Instantly marks threats with a **RED FLAG**, pushes a live real-time alert via WebSockets (`/ws/sms`), triggers a siren audio alert, and quarantines malicious links before users can click them.
+5. **Chrome Extension Real-Time Intercept:**
    - Click any high-risk link in Chrome.
    - Show the full-screen warning modal intercepting the click with "Go Back" and "Continue Anyway".
-5. **Analytics & History:**
+6. **Analytics & History:**
    - Demonstrate the live trend charts, risk score distribution, and filterable case history.

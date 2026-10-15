@@ -2,22 +2,27 @@ import re
 from typing import List, Dict, Any
 
 URGENCY_PATTERNS = [
-    r"\b(urgent|immediately|action required|account suspended|suspended within \d+ hours|final warning|last notice|deactivated|expire[s]? today|immediate action|unauthorized access|security breach)\b",
-    r"\b(within \d+ (minutes|hours|days)|lock your account|terminated|penalty|legal action|police|lawsuit)\b"
+    r"\b(urgent|immediately|action required|account suspended|account blocked|suspended within \d+ hours|final warning|last notice|deactivated|expire[s]? today|immediate action|unauthorized access|security breach)\b",
+    r"\b(within \d+ (minutes|hours|days)|lock your account|terminated|penalty|legal action|police|lawsuit|disconnected|power cut|unpaid bill)\b"
 ]
 
 CREDENTIAL_HARVESTING_PATTERNS = [
     r"\b(verify your (account|password|identity|ssn|pin|otp|credentials)|click here to login|update your payment|confirm your details|re-enter password)\b",
-    r"\b(one-time password|otp is|do not share|enter pin|bank account details|credit card number|cvv|security code)\b"
+    r"\b(one-time password|otp is|do not share|enter pin|bank account details|credit card number|cvv|security code|enter otp|verify otp|share otp|pan details|update kyc|kyc update|netbanking)\b"
 ]
 
 FINANCIAL_SCAM_PATTERNS = [
-    r"\b(won a prize|congratulations|lottery winner|claim your reward|\$\d+,\d+|\$\d+ free|bitcoin|crypto investment|guaranteed return|wire transfer|gift card|cash prize|claim \$)\b",
-    r"\b(refund of \$\d+|unpaid invoice|tax refund|overdue payment|loan approved|instant credit)\b"
+    r"\b(won a prize|congratulations|lottery winner|claim your reward|\$\d+,\d+|\$\d+ free|bitcoin|crypto investment|guaranteed return|wire transfer|gift card|cash prize|claim \$|rs \d+|cash prize of)\b",
+    r"\b(refund of \$\d+|unpaid invoice|tax refund|overdue payment|loan approved|instant credit|reward points)\b"
 ]
 
 IMPERSONATION_PATTERNS = [
-    r"\b(customer support|helpdesk|security team|bank officer|tax authority|irs|fedex|ups|dhl|amazon support|apple id|netflix billing|geek squad)\b"
+    r"\b(customer support|helpdesk|security team|bank officer|tax authority|irs|fedex|ups|dhl|amazon support|apple id|netflix billing|geek squad|sbi|hdfc|icici|kbc|electricity officer|whatsapp support)\b"
+]
+
+WHATSAPP_SCAM_PATTERNS = [
+    r"\b(part-time job|part time job|wfh job|work from home|earn \d+ daily|earn rs \d+|like (youtube|yt) videos|telegram task|joining bonus|rating task|prepaid task|daily payment)\b",
+    r"\b(whatsapp (security|code|pin)|verify your 6-digit|6-digit code|dropped my phone|temporary number|new number send money|hi mum|hi dad)\b"
 ]
 
 def analyze_scam_rules(text: str) -> Dict[str, Any]:
@@ -65,6 +70,16 @@ def analyze_scam_rules(text: str) -> Dict[str, Any]:
         points += 20 * impersonation_matches
         reasons.append("Impersonation of trusted institutions, banks, or support services")
         categories.append("Brand / Official Impersonation")
+
+    # 5. Check WhatsApp Specific Lures (Job/Telegram/Account Theft)
+    wa_matches = 0
+    for pattern in WHATSAPP_SCAM_PATTERNS:
+        if re.search(pattern, text_lower):
+            wa_matches += 1
+    if wa_matches > 0:
+        points += 50 * wa_matches
+        reasons.append("WhatsApp/Telegram scam vector detected (Fake Part-Time Job / Account Hijack / PIN Theft)")
+        categories.append("WhatsApp & Social Engineering")
 
     rule_score = min(100, points)
 
